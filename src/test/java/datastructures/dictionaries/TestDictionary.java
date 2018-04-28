@@ -247,7 +247,7 @@ public abstract class TestDictionary extends BaseTest {
         }
     }
 
-    @Test(timeout=SECOND)
+    @Test//(timeout=SECOND)
     public void testContainsKeyBasic() {
         IDictionary<String, Integer> dict = this.newDictionary();
 

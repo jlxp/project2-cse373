@@ -1,6 +1,7 @@
 package datastructures.concrete.dictionaries;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import datastructures.concrete.KVPair;
 import datastructures.interfaces.IDictionary;
@@ -28,7 +29,6 @@ public class ArrayDictionary<K, V> implements IDictionary<K, V> {
     @SuppressWarnings("unchecked")
     private Pair<K, V>[] makeArrayOfPairs(int arraySize) {
         return (Pair<K, V>[]) (new Pair[arraySize]);
-
     }
     
     /*
@@ -173,20 +173,31 @@ public class ArrayDictionary<K, V> implements IDictionary<K, V> {
     }
     
     private static class ArrayDictionaryIterator<K, V> implements Iterator<KVPair<K, V>> {
-        private Pair<K, V>[] pairs;
+        private Pair<K, V>[] current;
+        private int index; 
         
         public ArrayDictionaryIterator(Pair<K, V>[] pairs) {
-            this.pairs = pairs;
+            this.current = pairs;
+            this.index = 0;
         }
         
         public boolean hasNext() {
-            
+            return this.index < this.current.length && this.current[this.index] != null ;
         }
         
         public KVPair<K, V> next() {
-            if (this.pairs == null) {
-                throw new NoSuchElementException();
+            if (this.current[this.index] == null || this.index >= this.current.length) {
+                throw new NoSuchElementException("Dictionary is empty");
             }
+            K key;
+            V value;
+            if (this.hasNext()) {
+                key = (K) this.current[this.index].key;
+                value = (V) this.current[this.index].value;
+                this.index++;
+                return new KVPair<K, V>(key,value);
+            }
+            return null;
         }
     }
 }

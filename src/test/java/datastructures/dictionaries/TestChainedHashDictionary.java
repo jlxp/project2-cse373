@@ -62,6 +62,7 @@ public class TestChainedHashDictionary extends TestDictionary {
         }
         
         for (int i = start; i < start + values; i++) {
+            System.out.println(i);
             assertEquals(i, map.get(new Wrapper<>("" + i, i)));
             
             assertFalse(map.containsKey(new Wrapper<>("no", i)));

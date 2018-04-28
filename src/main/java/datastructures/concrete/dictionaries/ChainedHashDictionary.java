@@ -2,6 +2,7 @@ package datastructures.concrete.dictionaries;
 
 import datastructures.concrete.KVPair;
 import datastructures.interfaces.IDictionary;
+import misc.exceptions.NoSuchKeyException;
 import misc.exceptions.NotYetImplementedException;
 
 import java.util.Iterator;
@@ -13,11 +14,14 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     // You may not change or rename this field: we will be inspecting
     // it using our private tests.
     private IDictionary<K, V>[] chains;
-
+    private static final int INIT_SIZE = 10;
+    private int size;
+    
     // You're encouraged to add extra fields (and helper methods) though!
 
     public ChainedHashDictionary() {
-        throw new NotYetImplementedException();
+        this.chains = this.makeArrayOfChains(INIT_SIZE);
+        this.size = 0;
     }
 
     /**
@@ -33,30 +37,74 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         // more background on why we need this method.
         return (IDictionary<K, V>[]) new IDictionary[size];
     }
-
-    @Override
-    public V get(K key) {
-        throw new NotYetImplementedException();
+    
+    private int getIndex(K key, int size) {
+        if (key == null) {
+            return 0;
+        } else {
+            return Math.abs(key.hashCode()) % size;
+        }
     }
 
     @Override
+    public V get(K key) {
+        if(!this.containsKey(key)) {
+            throw new NoSuchKeyException("there is no key");
+        }
+        int index = this.getIndex(key, this.chains.length);
+        return this.chains[index].get(key);
+    }
+
+    
+    @Override
     public void put(K key, V value) {
-        throw new NotYetImplementedException();
+        if (this.size >= this.chains.length / 2) {
+            IDictionary<K,V>[] temp = this.makeArrayOfChains(this.chains.length * 2);
+            for (int i = 0; i < this.chains.length; i++) {
+                if (this.chains[i] != null) {
+                    for(KVPair<K,V> tempPair : this.chains[i]) {
+                        K newKey = tempPair.getKey();
+                        V newValue = tempPair.getValue();
+                        int index = this.getIndex(newKey, temp.length);                
+                        if(temp[index] == null) {
+                            temp[index] = new ArrayDictionary<K,V>();
+                        }
+                        temp[index].put(newKey, newValue);
+                    }
+                }
+            }
+            this.chains = temp;
+        } 
+        int index = this.getIndex(key, this.chains.length);                
+        if(this.chains[index] == null) {            
+            this.chains[index] = new ArrayDictionary<K,V>();
+            this.size++;
+        } else if (!this.chains[index].containsKey(key)) {
+            this.size++;
+        }
+        this.chains[index].put(key, value); 
     }
 
     @Override
     public V remove(K key) {
-        throw new NotYetImplementedException();
+        if(!this.containsKey(key)) {
+            throw new NoSuchKeyException("there is no key");
+        }
+        
+        int index = this.getIndex(key, this.chains.length);                
+        this.size--;
+        return (V) this.chains[index].remove(key);
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new NotYetImplementedException();
+        int index = this.getIndex(key, this.chains.length);  
+        return this.chains[index] != null && this.chains[index].containsKey(key);
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return this.size;
     }
 
     @Override
@@ -64,6 +112,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         // Note: you do not need to change this method
         return new ChainedIterator<>(this.chains);
     }
+
 
     /**
      * Hints:
