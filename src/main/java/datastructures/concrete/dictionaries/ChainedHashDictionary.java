@@ -214,58 +214,6 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
                 }
             }
             return current;
-            
-//            while(this.index < this.chains.length && chains[index] == null) {
-//                index++;
-//            }
-//            
-//            if (this.index == this.chains.length) {
-//                this.next = null;
-//            } else {
-//                for (int i = 0; i < this.vertical; i++) {
-//                    this.next = this.chains[index].iterator().next();
-//                }
-//                if(this.chains[index].iterator().hasNext()) {
-//                    this.next = this.chains[index].iterator().next();
-//                    this.vertical++;
-//                } else {
-//                    this.vertical = 0;
-//                    this.index++;
-//                    while(this.index < this.chains.length && chains[index] == null) {
-//                        index++;
-//                    }
-//                    if (this.index == this.chains.length) {
-//                        this.next = null;
-//                    } else {
-//                        this.next = this.chains[index].iterator().next();
-//                    } 
-//                }
-//                
-//            }
-//            return next; 
-            
-            
-//            this.current = this.next;
-//            for (int i = 0; i < this.vertical; i++) {
-//                this.next = this.chains[index].iterator().next();
-//            }
-//            if(this.chains[index].iterator().hasNext()) {
-//                this.next = this.chains[index].iterator().next();
-//                this.vertical++;
-//            } else {
-//                this.vertical = 0;
-//                this.index++;
-//                while (index < chains.length && chains[index] == null) {
-//                    this.index++;
-//                }
-//                if (this.index == this.chains.length) {
-//                    this.next = null;
-//                } else {
-//                    this.next = this.chains[index].iterator().next(); 
-//                    this.vertical = 1;
-//                }
-//            }
-//            return this.current;
         }
     }
 }

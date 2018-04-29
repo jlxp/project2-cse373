@@ -415,10 +415,8 @@ public abstract class TestDictionary extends BaseTest {
         for (int i = 0; i < dict.size(); i++) {
             assertEquals(iter1.hasNext(), iter2.hasNext());
             assertEquals(iter1.next(), iter2.next());
-            System.out.println("index: " + i + ", key: " + iter1.next().getKey());
         }
-        System.out.println(iter1.next().getKey());
-        
+
         assertFalse(iter1.hasNext());
         assertFalse(iter2.hasNext());
 
