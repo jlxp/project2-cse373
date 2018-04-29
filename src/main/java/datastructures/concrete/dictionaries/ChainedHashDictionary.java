@@ -3,7 +3,7 @@ package datastructures.concrete.dictionaries;
 import datastructures.concrete.KVPair;
 import datastructures.interfaces.IDictionary;
 import misc.exceptions.NoSuchKeyException;
-import misc.exceptions.NotYetImplementedException;
+//import misc.exceptions.NotYetImplementedException;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -114,7 +114,6 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         return new ChainedIterator<>(this.chains);
     }
 
-
     /**
      * Hints:
      *
@@ -161,61 +160,89 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         private IDictionary<K, V>[] chains;
         private int index;
         private KVPair<K,V> next;
-        private int vertical;
-        
-        
+        private Iterator<KVPair<K, V>> current;
         
         public ChainedIterator(IDictionary<K, V>[] chains) {
             this.chains = chains;
             this.index = 0;
-            while (index < chains.length && chains[index] == null) {
+            while (this.index < chains.length && chains[this.index] == null) {
                 this.index++;
             }
-            this.next = null;
-            int vertical = 1;
-
+            if (this.index != this.chains.length) {
+                this.current = chains[this.index].iterator();
+                this.next = this.current.next();
+            }
         }
 
         @Override
         public boolean hasNext() {
-            return this.index != this.chains.length;
+            if (this.current != null && this.current.hasNext()) {
+                return true;
+            } else {
+                int dex = this.index + 1;
+                while (dex < this.chains.length) {
+                    if (this.chains[dex] != null && this.chains[dex].iterator().hasNext()) {
+                        return true;
+                    }
+                    dex++;
+                }
+            }
+            return false;
         }
 
         @Override
         public KVPair<K, V> next() {
             if(!this.hasNext()) {
                 throw new NoSuchElementException("Dictionary is empty");
-            } 
+            }
+            
             KVPair<K,V> current = this.next;
             
-            while(this.index < this.chains.length && chains[index] == null) {
-                index++;
-            }
-            
-            if (this.index == this.chains.length) {
-                this.next = null;
+            if (this.current.hasNext()) {
+                this.next = this.current.next();
             } else {
-                for (int i = 0; i < this.vertical; i++) {
-                    this.next = this.chains[index].iterator().next();
-                }
-                if(this.chains[index].iterator().hasNext()) {
-                    this.next = this.chains[index].iterator().next();
-                    this.vertical++;
-                } else {
-                    this.vertical = 0;
+                this.index++;
+                while (this.index < this.chains.length && chains[this.index] == null) {
                     this.index++;
-                    while(this.index < this.chains.length && chains[index] == null) {
-                        index++;
-                    }
-                    if (this.index == this.chains.length) {
-                        this.next = null;
-                    } else {
-                        this.next = this.chains[index].iterator().next();
-                    } 
                 }
-                
+                if (this.index != this.chains.length) {
+                    this.current = this.chains[this.index].iterator();
+                    this.next = this.current.next();
+                } else {
+                    this.current = null;
+                    this.next = null;
+                }
             }
-            return next; 
+            return current;
+            
+//            while(this.index < this.chains.length && chains[index] == null) {
+//                index++;
+//            }
+//            
+//            if (this.index == this.chains.length) {
+//                this.next = null;
+//            } else {
+//                for (int i = 0; i < this.vertical; i++) {
+//                    this.next = this.chains[index].iterator().next();
+//                }
+//                if(this.chains[index].iterator().hasNext()) {
+//                    this.next = this.chains[index].iterator().next();
+//                    this.vertical++;
+//                } else {
+//                    this.vertical = 0;
+//                    this.index++;
+//                    while(this.index < this.chains.length && chains[index] == null) {
+//                        index++;
+//                    }
+//                    if (this.index == this.chains.length) {
+//                        this.next = null;
+//                    } else {
+//                        this.next = this.chains[index].iterator().next();
+//                    } 
+//                }
+//                
+//            }
+//            return next; 
             
             
 //            this.current = this.next;
