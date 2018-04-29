@@ -6,6 +6,7 @@ import datastructures.interfaces.ISet;
 import misc.exceptions.NotYetImplementedException;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * See ISet for more details on what each method is supposed to do.
@@ -26,7 +27,10 @@ public class ChainedHashSet<T> implements ISet<T> {
 
     @Override
     public void remove(T item) {
-        throw new NotYetImplementedException();
+        if (!this.map.containsKey(item)) {
+            throw new NoSuchElementException();
+        }
+        map.remove(item);
     }
 
     @Override
@@ -55,12 +59,12 @@ public class ChainedHashSet<T> implements ISet<T> {
 
         @Override
         public boolean hasNext() {
-            throw new NotYetImplementedException();
+            return this.iter.hasNext();
         }
 
         @Override
         public T next() {
-            throw new NotYetImplementedException();
+            return this.iter.next();
         }
     }
 }
