@@ -176,17 +176,6 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
 
         @Override
         public boolean hasNext() {
-            if (this.current != null && this.current.hasNext()) {
-                return true;
-            } else {
-                int dex = this.index + 1;
-                while (dex < this.chains.length) {
-                    if (this.chains[dex] != null && this.chains[dex].iterator().hasNext()) {
-                        return true;
-                    }
-                    dex++;
-                }
-            }
             return this.next != null;
         }
 
