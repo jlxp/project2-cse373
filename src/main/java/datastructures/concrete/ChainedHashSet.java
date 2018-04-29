@@ -21,7 +21,9 @@ public class ChainedHashSet<T> implements ISet<T> {
 
     @Override
     public void add(T item) {
-        throw new NotYetImplementedException();
+        if(!this.contains(item)) {
+            this.map.put(item, true);
+        }
     }
 
     @Override
@@ -31,12 +33,12 @@ public class ChainedHashSet<T> implements ISet<T> {
 
     @Override
     public boolean contains(T item) {
-        throw new NotYetImplementedException();
+        return this.map.containsKey(item);
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return this.map.size();
     }
 
     @Override
