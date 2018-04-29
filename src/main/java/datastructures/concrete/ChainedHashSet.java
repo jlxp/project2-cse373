@@ -66,7 +66,7 @@ public class ChainedHashSet<T> implements ISet<T> {
 
         @Override
         public T next() {
-            return this.iter.next();
+            return (T) this.iter.next().getKey();
         }
     }
 }
