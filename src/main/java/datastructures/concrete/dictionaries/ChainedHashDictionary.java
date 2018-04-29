@@ -187,7 +187,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
                     dex++;
                 }
             }
-            return false;
+            return this.next != null;
         }
 
         @Override
