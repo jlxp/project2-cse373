@@ -1,6 +1,9 @@
 package datastructures.dictionaries;
 
 import static org.junit.Assert.assertTrue;
+
+import java.util.Iterator;
+
 import static org.junit.Assert.assertFalse;
 import org.junit.Assert;
 
@@ -152,6 +155,65 @@ public class TestChainedHashDictionary extends TestDictionary {
         for (int i = 0; i < limit; i++) {
             assertEquals(-i, dict.get(i));
             dict.remove(i);
+        }
+    }
+    
+    @Test(timeout=10*SECOND)
+    public void copyingIterTest() {
+        IDictionary<Integer, Integer> dict = this.newDictionary();
+        IDictionary<Integer, Integer> copy = this.newDictionary();
+        int limit = 1000000;
+        
+        for (int i = 0; i < limit; i++) {
+            dict.put(i, i);
+        }
+        
+        Iterator<KVPair<Integer, Integer>> iter = dict.iterator();
+        
+        while(iter.hasNext()) {
+            KVPair<Integer, Integer> temp = iter.next();
+            copy.put(temp.getKey(), temp.getValue());
+        }
+        
+//        for (int i = 0; i < limit; i++) {
+//            assertEquals(dict.get(i),copy.get(i));
+//        }
+        
+        assertEquals(dict.size(), copy.size());
+    }
+    
+    @Test(timeout=10*SECOND)
+    public void stressIterTest() {
+        IDictionary<Integer, Integer> dict = this.newDictionary();
+        int limit = 1000000;
+        
+        for (int i = 0; i < limit; i++) {
+            dict.put(i,i);
+        }
+        
+        Iterator<KVPair<Integer, Integer>> iter = dict.iterator();
+
+        for (int i = 0; i < limit; i++) {
+            assertEquals(i, iter.next().getValue());
+        }
+        
+        for (int i = 0; i < limit; i++) {
+            assertFalse(iter.hasNext());
+        }
+        
+        for (int i = 0; i < limit; i++) {
+            dict.put(i,-i);
+        }
+        
+        iter = dict.iterator();
+        int i = 0;
+        while(iter.hasNext()) {
+            assertEquals(-i, iter.next().getValue());
+            i++;
+        }
+        
+        for (int j = 0; j < limit; j++) {
+            assertFalse(iter.hasNext());
         }
     }
 }
