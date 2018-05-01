@@ -26,7 +26,7 @@ public class ChainedHashSet<T> implements ISet<T> {
      */
     @Override
     public void add(T item) {
-        if(!this.contains(item)) {
+        if (!this.contains(item)) {
             this.map.put(item, true);
         }
     }

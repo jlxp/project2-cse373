@@ -41,11 +41,11 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     /* 
      * return the index using hashTable logic in class
      */
-    private int getIndex(K key, int size) {
+    private int getIndex(K key, int tblSize) {
         if (key == null) {
             return 0;
         } else {
-            return Math.abs(key.hashCode()) % size;
+            return Math.abs(key.hashCode()) % tblSize;
         }
     }
 
@@ -56,7 +56,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
      */
     @Override
     public V get(K key) {
-        if(!this.containsKey(key)) {
+        if (!this.containsKey(key)) {
             throw new NoSuchKeyException("there is no key");
         }
         int index = this.getIndex(key, this.chains.length);
@@ -71,15 +71,15 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     @Override
     public void put(K key, V value) {
         if (this.size >= this.chains.length / 2) {
-            IDictionary<K,V>[] temp = this.makeArrayOfChains(this.chains.length * 2);
+            IDictionary<K, V>[] temp = this.makeArrayOfChains(this.chains.length * 2);
             for (int i = 0; i < this.chains.length; i++) {
                 if (this.chains[i] != null) {
-                    for(KVPair<K,V> tempPair : this.chains[i]) {
+                    for (KVPair<K, V> tempPair : this.chains[i]) {
                         K newKey = tempPair.getKey();
                         V newValue = tempPair.getValue();
                         int index = this.getIndex(newKey, temp.length);                
-                        if(temp[index] == null) {
-                            temp[index] = new ArrayDictionary<K,V>();
+                        if (temp[index] == null) {
+                            temp[index] = new ArrayDictionary<K, V>();
                         }
                         temp[index].put(newKey, newValue);
                     }
@@ -88,8 +88,8 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
             this.chains = temp;
         } 
         int index = this.getIndex(key, this.chains.length);                
-        if(this.chains[index] == null) {            
-            this.chains[index] = new ArrayDictionary<K,V>();
+        if (this.chains[index] == null) {
+            this.chains[index] = new ArrayDictionary<K, V>();
             this.size++;
         } else if (!this.chains[index].containsKey(key)) {
             this.size++;
@@ -105,7 +105,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
      */
     @Override
     public V remove(K key) {
-        if(!this.containsKey(key)) {
+        if (!this.containsKey(key)) {
             throw new NoSuchKeyException("there is no key");
         }
         
@@ -115,7 +115,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     }
 
     /*
-     * return true if the dictionary has the given key
+     * return true if the dictionary has the given key; false otherwise
      * @see datastructures.interfaces.IDictionary#containsKey(java.lang.Object)
      */
     @Override
@@ -134,7 +134,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     }
 
     /*
-     * return iterating throughout the dictionary
+     * return iterator of the dictionary
      * @see datastructures.interfaces.IDictionary#iterator()
      */
     @Override
@@ -188,7 +188,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     private static class ChainedIterator<K, V> implements Iterator<KVPair<K, V>> {
         private IDictionary<K, V>[] chains;
         private int index;
-        private KVPair<K,V> next;
+        private KVPair<K, V> next;
         private Iterator<KVPair<K, V>> currIter;
         
         public ChainedIterator(IDictionary<K, V>[] chains) {
@@ -210,11 +210,11 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
 
         @Override
         public KVPair<K, V> next() {
-            if(!this.hasNext()) {
+            if (!this.hasNext()) {
                 throw new NoSuchElementException("Dictionary is empty");
             }
             
-            KVPair<K,V> current = this.next;
+            KVPair<K, V> current = this.next;
             
             if (this.currIter.hasNext()) {
                 this.next = this.currIter.next();
