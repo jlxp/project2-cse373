@@ -38,6 +38,9 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         return (IDictionary<K, V>[]) new IDictionary[size];
     }
     
+    /* 
+     * return the index using hashTable logic in class
+     */
     private int getIndex(K key, int size) {
         if (key == null) {
             return 0;
@@ -46,6 +49,11 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         }
     }
 
+    /*
+     * return the given key's paired value
+     * @see datastructures.interfaces.IDictionary#get(java.lang.Object)
+     * @throw NoSuchKeyException if there is no given key in the dictionary
+     */
     @Override
     public V get(K key) {
         if(!this.containsKey(key)) {
@@ -55,7 +63,11 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         return this.chains[index].get(key);
     }
 
-    
+    /*
+     * put key-value pair into the dictionary
+     * if the size of dictionary becomes large enough resize it and put the pair in
+     * @see datastructures.interfaces.IDictionary#put(java.lang.Object, java.lang.Object)
+     */
     @Override
     public void put(K key, V value) {
         if (this.size >= this.chains.length / 2) {
@@ -85,6 +97,12 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         this.chains[index].put(key, value); 
     }
 
+    /*
+     * remove the pair that matches given key
+     * return the value of the pair
+     * @see datastructures.interfaces.IDictionary#remove(java.lang.Object)
+     * @throw NoSuchKeyException if the dictionary has no given key
+     */
     @Override
     public V remove(K key) {
         if(!this.containsKey(key)) {
@@ -96,17 +114,29 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         return (V) this.chains[index].remove(key);
     }
 
+    /*
+     * return true if the dictionary has the given key
+     * @see datastructures.interfaces.IDictionary#containsKey(java.lang.Object)
+     */
     @Override
     public boolean containsKey(K key) {
         int index = this.getIndex(key, this.chains.length);  
         return this.chains[index] != null && this.chains[index].containsKey(key);
     }
 
+    /*
+     * return the number of the pairs in the dictionary
+     * @see datastructures.interfaces.IDictionary#size()
+     */
     @Override
     public int size() {
         return this.size;
     }
 
+    /*
+     * return iterating throughout the dictionary
+     * @see datastructures.interfaces.IDictionary#iterator()
+     */
     @Override
     public Iterator<KVPair<K, V>> iterator() {
         // Note: you do not need to change this method
@@ -159,7 +189,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         private IDictionary<K, V>[] chains;
         private int index;
         private KVPair<K,V> next;
-        private Iterator<KVPair<K, V>> current;
+        private Iterator<KVPair<K, V>> currIter;
         
         public ChainedIterator(IDictionary<K, V>[] chains) {
             this.chains = chains;
@@ -168,8 +198,8 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
                 this.index++;
             }
             if (this.index != this.chains.length) {
-                this.current = chains[this.index].iterator();
-                this.next = this.current.next();
+                this.currIter = chains[this.index].iterator();
+                this.next = this.currIter.next();
             }
         }
 
@@ -186,18 +216,18 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
             
             KVPair<K,V> current = this.next;
             
-            if (this.current.hasNext()) {
-                this.next = this.current.next();
+            if (this.currIter.hasNext()) {
+                this.next = this.currIter.next();
             } else {
                 this.index++;
                 while (this.index < this.chains.length && chains[this.index] == null) {
                     this.index++;
                 }
                 if (this.index != this.chains.length) {
-                    this.current = this.chains[this.index].iterator();
-                    this.next = this.current.next();
+                    this.currIter = this.chains[this.index].iterator();
+                    this.next = this.currIter.next();
                 } else {
-                    this.current = null;
+                    this.currIter = null;
                     this.next = null;
                 }
             }
