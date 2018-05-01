@@ -3,7 +3,6 @@ package datastructures.concrete;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.ISet;
-import misc.exceptions.NotYetImplementedException;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -20,6 +19,11 @@ public class ChainedHashSet<T> implements ISet<T> {
         this.map = new ChainedHashDictionary<>();
     }
 
+    /*
+     * add the given item to the set
+     * if already existed, nothing happen
+     * @see datastructures.interfaces.ISet#add(java.lang.Object)
+     */
     @Override
     public void add(T item) {
         if(!this.contains(item)) {
@@ -27,19 +31,33 @@ public class ChainedHashSet<T> implements ISet<T> {
         }
     }
 
+    /*
+     * remove the given item from the set
+     * @throw NoSuchElementException if there is no given item at the set
+     * @see datastructures.interfaces.ISet#remove(java.lang.Object)
+     */
     @Override
     public void remove(T item) {
         if (!this.map.containsKey(item)) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("item is not found");
         }
-        map.remove(item);
+        this.map.remove(item);
     }
 
+    /*
+     * check if set has given item
+     * return true if set has given item, false otherwise
+     * @see datastructures.interfaces.ISet#contains(java.lang.Object)
+     */
     @Override
     public boolean contains(T item) {
         return this.map.containsKey(item);
     }
 
+    /*
+     * return the number of element oof the set
+     * @see datastructures.interfaces.ISet#size()
+     */
     @Override
     public int size() {
         return this.map.size();
