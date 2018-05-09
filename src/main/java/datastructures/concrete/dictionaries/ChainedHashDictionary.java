@@ -15,13 +15,13 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     // it using our private tests.
     private IDictionary<K, V>[] chains;
     private static final int INIT_SIZE = 10;
-    private int size;
+    private int length;
     
     // You're encouraged to add extra fields (and helper methods) though!
 
     public ChainedHashDictionary() {
         this.chains = this.makeArrayOfChains(INIT_SIZE);
-        this.size = 0;
+        this.length = 0;
     }
 
     /**
@@ -70,7 +70,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
      */
     @Override
     public void put(K key, V value) {
-        if (this.size >= this.chains.length / 2) {
+        if (this.length >= this.chains.length / 2) {
             IDictionary<K, V>[] temp = this.makeArrayOfChains(this.chains.length * 2);
             for (int i = 0; i < this.chains.length; i++) {
                 if (this.chains[i] != null) {
@@ -90,9 +90,9 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         int index = this.getIndex(key, this.chains.length);                
         if (this.chains[index] == null) {
             this.chains[index] = new ArrayDictionary<K, V>();
-            this.size++;
+            this.length++;
         } else if (!this.chains[index].containsKey(key)) {
-            this.size++;
+            this.length++;
         }
         this.chains[index].put(key, value); 
     }
@@ -110,7 +110,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         }
         
         int index = this.getIndex(key, this.chains.length);                
-        this.size--;
+        this.length--;
         return (V) this.chains[index].remove(key);
     }
 
@@ -130,7 +130,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
      */
     @Override
     public int size() {
-        return this.size;
+        return this.length;
     }
 
     /*

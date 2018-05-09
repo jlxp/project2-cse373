@@ -182,7 +182,7 @@ public class ArrayDictionary<K, V> implements IDictionary<K, V> {
         }
         
         public boolean hasNext() {
-            return this.index < this.current.length && this.current[this.index] != null ;
+            return this.index < this.current.length && this.current[this.index] != null;
         }
         
         public KVPair<K, V> next() {
@@ -195,7 +195,7 @@ public class ArrayDictionary<K, V> implements IDictionary<K, V> {
                 key = (K) this.current[this.index].key;
                 value = (V) this.current[this.index].value;
                 this.index++;
-                return new KVPair<K, V>(key,value);
+                return new KVPair<K, V>(key, value);
             }
             return null;
         }
